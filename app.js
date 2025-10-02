@@ -3,11 +3,14 @@ const searchForm = document.querySelector('form');
 const imagesContainer = document.querySelector('.images-container');
 const searchInput = document.querySelector('.search-input');
 const loadMoreBtn = document.querySelector('.loadMoreBtn');
+const loader = document.querySelector('.loader');
 
 let page = 1;
 
 const fetchImages = async (query, pageNo) => {
     try {
+        loader.style.display = 'block';
+        loadMoreBtn.style.display = 'none';
     if (pageNo === 1) {
         imagesContainer.innerHTML = '';
     }
@@ -15,6 +18,8 @@ const fetchImages = async (query, pageNo) => {
     const url = `https://api.unsplash.com/search/photos?query=${query}&per_page=28&page=${pageNo}&client_id=${accessKey}`;
     const response = await fetch(url);
     const data = await response.json();
+
+    loader.style.display = 'none';
 
     if (data.results.length > 0) {
         data.results.forEach(photo => {
@@ -46,6 +51,7 @@ const fetchImages = async (query, pageNo) => {
         }
     }
 } catch(error) {
+    loader.style.display = 'none';
     imagesContainer.innerHTML = `<h2>Failed to fetch images. Please try again later.</h2>`
 }
 
